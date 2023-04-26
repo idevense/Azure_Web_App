@@ -1,0 +1,1 @@
+Testing bicep templates to deploy iac and azure web app
