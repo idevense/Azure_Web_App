@@ -2,9 +2,11 @@
 targetScope = 'subscription' 
 
 //parameter definitions
-param loc string  = 'Norway East'
+param loc string  = 'norwayeast'
+param pName string = ''
+param sku string = 'F1'
 
-var appName = 'myTestApp' // Fetch project name from package here
+var appName = pName // Fetch project name from package here
 var rgName = 'rg-${appName}'
 var aspName =  'asp-${appName}'
 
@@ -18,12 +20,12 @@ resource testAppResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' = 
 //Create a network security group.  Since the scope below is set as "scope:bookAppResourceGroup", this gets created within the particular resource group
 //by default, the resources are not allowed to be created under the subscription scope.  To be able to do that, your resource creation code should be designed as modules.
 module testAppAsp 'aspModule.bicep' = {
-  scope: bookAppResourceGroup
+  scope: testAppResourceGroup
   name: aspName
   params: {
     loc: loc
     aspName: aspName
-    sku: 'F1'
+    sku: sku
     instanceCount: 1
     isElasticScaling: true
     isZoneRedundant: false
@@ -32,10 +34,10 @@ module testAppAsp 'aspModule.bicep' = {
 }
 
 module testAppWebApp 'webappModule.bicep' = {
-  scope: bookAppResourceGroup
+  scope: testAppResourceGroup
   name: appName
   params: {
-    aspId: bookAppAsp.outputs.aspId
+    aspId: testAppAsp.outputs.aspId
     loc: loc
     webAppName: appName 
     frameworkVersion: 'v6.0'

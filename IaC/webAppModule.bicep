@@ -15,7 +15,7 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
     hostNameSslStates: [
       {
         name: '${webAppName}.azurewebsites.net'
-        sslState: 'Disabled'
+        sslState: 'SniEnabled' //not supported in SKU F1
         hostType: 'Standard'
       }
     ]
@@ -27,19 +27,19 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
     siteConfig: {
       numberOfWorkers: 1
       acrUseManagedIdentityCreds: false
-      alwaysOn: true
+      alwaysOn: true //not supported in SKU F1
       http20Enabled: false
       functionAppScaleLimit: 0
-      minimumElasticInstanceCount: 0
+      minimumElasticInstanceCount: 1
     }
 
     clientAffinityEnabled: true
-    clientCertEnabled: true
+    clientCertEnabled: true //not supporteds in SKU F1
     clientCertMode: 'Required'
     hostNamesDisabled: false
     containerSize:  0
     dailyMemoryTimeQuota: 0
-    httpsOnly: false
+    httpsOnly: true
     redundancyMode: 'None'
     storageAccountRequired: false
     keyVaultReferenceIdentity: 'SystemAssigned'
@@ -73,7 +73,7 @@ resource siteConfig 'Microsoft.Web/sites/config@2022-09-01' = {
     scmType: 'BitbucketGit' //https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.management.appservice.fluent.models.scmtype?view=azure-dotnet
     use32BitWorkerProcess: true
     webSocketsEnabled: false
-    alwaysOn: true
+    alwaysOn: false //not supporteds in SKU F1
     managedPipelineMode: 'Integrated'
     virtualApplications: [
       {
@@ -114,7 +114,7 @@ resource siteConfig 'Microsoft.Web/sites/config@2022-09-01' = {
     scmMinTlsVersion: '1.2'
     ftpsState: 'Disabled'
     preWarmedInstanceCount: 0
-    minimumElasticInstanceCount: 0
+    minimumElasticInstanceCount: 1
     functionsRuntimeScaleMonitoringEnabled: false
     azureStorageAccounts: {}
   }
